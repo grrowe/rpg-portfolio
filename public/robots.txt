@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO: update if the production domain isn't grahamrowe.dev
+Sitemap: https://grahamrowe.dev/sitemap.xml

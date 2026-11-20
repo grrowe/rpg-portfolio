@@ -1,0 +1,33 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Room not found | Graham Rowe" description="This room doesn't exist.">
+  <main id="sheet" class="lost">
+    <p class="label">natural 1</p>
+    <h1>You wandered into a room that doesn't exist.</h1>
+    <p>The map has no record of this place. Head back to the character sheet, or straight to the tavern.</p>
+    <p class="row">
+      <a class="btn primary" href="/">Return to the sheet</a>
+      <a class="btn" href="/#tavern">Visit the tavern</a>
+    </p>
+  </main>
+</Base>
+
+<style>
+  #sheet.lost {
+    max-width: 640px;
+    margin-top: 12vh;
+    text-align: center;
+  }
+  .lost h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    margin: 0.2em 0 0.4em;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+</style>

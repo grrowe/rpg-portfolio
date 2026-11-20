@@ -1,0 +1,14 @@
+---
+import { PROFILE } from "../data/sheet";
+---
+<section class="box" id="tavern" aria-labelledby="h-tavern">
+  <h2 id="h-tavern" tabindex="-1">The Tavern <span class="sub">Contact</span></h2>
+  <div class="tavern">
+    <p>Recruiting for a team, or need a site or app built? Send a raven. I reply within a day or two.</p>
+    <ul class="links">
+      <li>Email: <a href={`mailto:${PROFILE.email}`}>{PROFILE.email}</a></li>
+      <li>LinkedIn: <a href={PROFILE.linkedin} target="_blank" rel="noreferrer">linkedin.com/in/gmrowewebdev</a></li>
+      <li>GitHub: <a href={PROFILE.github} target="_blank" rel="noreferrer">github.com/grrowe</a></li>
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+---
+/** Click an ability score, roll a d20, and get the real proof behind that score. */
+---
+<section class="box tray-box" aria-labelledby="h-tray">
+  <h2 id="h-tray">Dice tray <span class="sub">Roll an ability to see the proof</span></h2>
+  <div class="tray">
+    <svg class="d20" id="d20" viewBox="0 0 100 100" aria-hidden="true">
+      <polygon class="f3" points="50,4 90,27 90,73 50,96 10,73 10,27"></polygon>
+      <polygon class="f2" points="50,4 90,27 50,24"></polygon>
+      <polygon class="f2" points="10,27 50,4 50,24"></polygon>
+      <polygon class="f3" points="90,27 90,73 74,64"></polygon>
+      <polygon class="f2" points="10,27 26,64 10,73"></polygon>
+      <polygon class="f3" points="26,64 74,64 50,96"></polygon>
+      <polygon class="f1" points="50,24 74,64 26,64"></polygon>
+      <line x1="50" y1="24" x2="90" y2="27"></line><line x1="50" y1="24" x2="10" y2="27"></line>
+      <line x1="74" y1="64" x2="90" y2="27"></line><line x1="74" y1="64" x2="90" y2="73"></line>
+      <line x1="26" y1="64" x2="10" y2="27"></line><line x1="26" y1="64" x2="10" y2="73"></line>
+      <line x1="74" y1="64" x2="50" y2="96"></line><line x1="26" y1="64" x2="50" y2="96"></line>
+      <text id="d20num" x="50" y="56">20</text>
+    </svg>
+    <div aria-live="polite">
+      <p class="roll-line" id="rollLine">Pick an ability score to roll for it.</p>
+      <ul class="proof" id="proof"></ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { ABILITIES, abilityMod, fmtMod } from "../data/sheet";
+
+  const d20 = document.getElementById("d20");
+  const num = document.getElementById("d20num");
+  const line = document.getElementById("rollLine");
+  const proof = document.getElementById("proof");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let busy = false;
+
+  const li = (text: string) => Object.assign(document.createElement("li"), { textContent: text });
+
+  document.addEventListener("click", (e) => {
+    const btn = (e.target as Element).closest<HTMLButtonElement>(".ability");
+    const a = btn && ABILITIES.find((x) => x.key === btn.dataset.key);
+    if (!btn || !a || busy || !d20 || !num || !line || !proof) return;
+
+    document.querySelectorAll(".ability").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    const mod = abilityMod(a.score);
+    const roll = 1 + Math.floor(Math.random() * 20);
+    const total = roll + mod;
+
+    const show = () => {
+      busy = false;
+      num.textContent = String(roll);
+      d20.classList.toggle("crit", roll === 20);
+      const nat = (t: string) => Object.assign(document.createElement("span"), { className: "nat", textContent: t });
+      if (roll === 20) line.replaceChildren(nat("NATURAL 20!"), ` Critical success on ${a.name} (${a.domain}).`);
+      else if (roll === 1) line.replaceChildren(nat("Natural 1."), " The dice gods frown, but the proof stands:");
+      else {
+        const verdict = total >= 15 ? "Success." : "Close enough; the record speaks for itself.";
+        line.replaceChildren(
+          `${a.key} check: rolled ${roll} ${fmtMod(mod)} = `,
+          Object.assign(document.createElement("b"), { textContent: String(total) }),
+          `. ${verdict}`,
+        );
+      }
+      proof.replaceChildren(...a.proof.map(li));
+    };
+
+    if (reduceMotion) return show();
+    busy = true;
+    line.textContent = "Rolling…";
+    proof.replaceChildren();
+    d20.classList.remove("rolling", "crit");
+    void d20.getBoundingClientRect(); // restart the CSS animation
+    d20.classList.add("rolling");
+    const flicker = setInterval(() => (num.textContent = String(1 + Math.floor(Math.random() * 20))), 55);
+    setTimeout(() => {
+      clearInterval(flicker);
+      show();
+    }, 900);
+  });
+</script>

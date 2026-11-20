@@ -1,0 +1,17 @@
+---
+import { INVENTORY, RARITY_COLOR } from "../data/sheet";
+---
+<section class="box inv" aria-labelledby="h-inv">
+  <h2 id="h-inv">Inventory <span class="sub">Tech stack</span></h2>
+  <ul>
+    {
+      INVENTORY.map(([name, rarity, note]) => (
+        <li style={`--r:${RARITY_COLOR[rarity]}`}>
+          <b>{name}</b>
+          <span class="rar">{rarity}</span>
+          <span class="note">{note}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

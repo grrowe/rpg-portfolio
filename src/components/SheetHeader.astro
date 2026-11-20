@@ -1,0 +1,52 @@
+---
+import { PROFILE, experience } from "../data/sheet";
+import { avatarSvg } from "../data/avatar";
+const { years, level, progress } = experience();
+const pct = (progress * 100).toFixed(1);
+const portrait = `data:image/svg+xml,${encodeURIComponent(avatarSvg())}`;
+---
+<header class="sheet-top" id="top">
+  <div class="nameplate">
+    <img class="portrait" src={portrait} width="96" height="96" alt={`Pixel-art portrait of ${PROFILE.name} as a mage`} />
+    <p class="label">character name</p>
+    <h1 tabindex="-1">{PROFILE.name}</h1>
+    <p class="tagline">{PROFILE.tagline}</p>
+  </div>
+  <dl class="fields">
+    <div><dt>class &amp; level</dt><dd>{PROFILE.className} · <span data-xp="level">Lvl {level}</span></dd></div>
+    <div><dt>multiclass</dt><dd>{PROFILE.multiclass}</dd></div>
+    <div><dt>background</dt><dd>{PROFILE.background}</dd></div>
+    <div><dt>alignment</dt><dd>{PROFILE.alignment} <small>({PROFILE.alignmentNote})</small></dd></div>
+    <div class="xp">
+      <dt>experience</dt>
+      <dd>
+        <span class="xpbar" role="img" aria-label={`${Math.round(progress * 100)}% of the way to level ${level + 1}`}>
+          <span data-xp="bar" style={`width:${pct}%`}></span>
+        </span>
+        <span data-xp="text">
+          {years.toFixed(1)} years shipping production software · {Math.round(progress * 100)}% to level {level + 1}
+        </span>
+        <span class="relic-badge" id="relicBadge"></span>
+      </dd>
+    </div>
+  </dl>
+  <div class="actions">
+    <a class="btn primary" href="#tavern">Recruit to your party</a>
+    <a class="btn" href="#tavern">Hire a mercenary</a>
+    <button class="btn ghost" type="button" id="reenter">⚔ Re-enter the dungeon</button>
+  </div>
+</header>
+
+<script>
+  import { experience } from "../data/sheet";
+
+  // The build bakes in today's XP; refresh it so the bar stays right between deploys.
+  const { years, level, progress } = experience();
+  const set = (k: string, fn: (el: HTMLElement) => void) =>
+    document.querySelectorAll<HTMLElement>(`[data-xp="${k}"]`).forEach(fn);
+  set("level", (el) => (el.textContent = `Lvl ${level}`));
+  set("bar", (el) => (el.style.width = `${(progress * 100).toFixed(1)}%`));
+  set("text", (el) => {
+    el.textContent = `${years.toFixed(1)} years shipping production software · ${Math.round(progress * 100)}% to level ${level + 1}`;
+  });
+</script>

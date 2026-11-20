@@ -1,0 +1,30 @@
+---
+import { ABILITIES, abilityMod, fmtMod } from "../data/sheet";
+---
+<section class="box abilities" id="abilities" aria-labelledby="h-abilities">
+  <h2 id="h-abilities" tabindex="-1">Ability scores</h2>
+  <ul>
+    {
+      ABILITIES.map((a) => (
+        <li>
+          <button
+            class="ability"
+            type="button"
+            data-key={a.key}
+            aria-pressed="false"
+            aria-label={`${a.name}, ${a.domain}, score ${a.score}. Roll for proof.`}
+          >
+            <span class="shield">
+              <b>{a.score}</b>
+              <i>{fmtMod(abilityMod(a.score))}</i>
+            </span>
+            <span>
+              <span class="k">{a.key}</span>
+              <span class="d">{a.domain}</span>
+            </span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</section>

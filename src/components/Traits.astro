@@ -1,0 +1,16 @@
+---
+import { TRAITS } from "../data/sheet";
+---
+<section class="box traits" aria-labelledby="h-traits">
+  <h2 id="h-traits">Features &amp; traits</h2>
+  <dl>
+    {
+      TRAITS.map(([name, desc]) => (
+        <div>
+          <dt>{name}</dt>
+          <dd>{desc}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

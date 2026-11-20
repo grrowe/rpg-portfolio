@@ -1,0 +1,36 @@
+---
+import { QUESTS } from "../data/sheet";
+const TAG = { active: "ACTIVE QUEST", completed: "COMPLETED", training: "TRAINING" } as const;
+---
+<section class="box" id="quest-log" aria-labelledby="h-quests">
+  <h2 id="h-quests" tabindex="-1">Quest log <span class="sub">Work experience</span></h2>
+  <ol class="quests">
+    {
+      QUESTS.map((q) => (
+        <li class="quest">
+          <div>
+            <h3>{q.company}</h3>
+            <div class="where">{q.where}</div>
+            <span class={`tag ${q.status}`}>{TAG[q.status]}</span>
+          </div>
+          <div>
+            {q.roles.map((r) => (
+              <div class="role">
+                <h4>
+                  {r.title} <span>{r.period}</span>
+                </h4>
+                {r.bullets.length > 0 && (
+                  <ul>
+                    {r.bullets.map((b) => (
+                      <li>{b}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</section>

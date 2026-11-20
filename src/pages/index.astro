@@ -1,0 +1,42 @@
+---
+import Base from "../layouts/Base.astro";
+import Dungeon from "../components/Dungeon.astro";
+import SheetHeader from "../components/SheetHeader.astro";
+import AbilityScores from "../components/AbilityScores.astro";
+import DiceTray from "../components/DiceTray.astro";
+import Traits from "../components/Traits.astro";
+import Proficiencies from "../components/Proficiencies.astro";
+import Inventory from "../components/Inventory.astro";
+import Spellbook from "../components/Spellbook.astro";
+import QuestLog from "../components/QuestLog.astro";
+import Tavern from "../components/Tavern.astro";
+---
+<Base
+  title="Graham Rowe | Senior Full-Stack Engineer"
+  description="Graham Rowe builds fast, reliable full-stack web apps. Brave the dungeon or read the character sheet: experience, skills, projects and freelance services."
+  dungeon
+>
+  <Dungeon />
+  <main id="sheet">
+    <SheetHeader />
+    <div class="grid">
+      <div class="col left">
+        <AbilityScores />
+      </div>
+      <div class="col">
+        <DiceTray />
+        <Traits />
+        <Proficiencies />
+      </div>
+      <div class="col">
+        <Inventory />
+        <Spellbook />
+      </div>
+    </div>
+    <QuestLog />
+    <Tavern />
+  </main>
+  <footer>
+    © {new Date().getFullYear()} Graham Rowe · Hand-built: no page builder, no game engine, no framework runtime.
+  </footer>
+</Base>

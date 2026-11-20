@@ -1,0 +1,70 @@
+---
+/**
+ * Optional first-person intro. The markup is server-rendered (hidden unless the head script
+ * added html.in-dungeon); the engine in src/game is code-split and only fetched when needed.
+ */
+import "../styles/dungeon.css";
+import { experience } from "../data/sheet";
+const { level } = experience();
+---
+<div
+  id="dungeon"
+  role="application"
+  aria-label="Optional first-person dungeon intro. Press Escape or use the skip button to go straight to the character sheet."
+>
+  <div id="view">
+    <canvas id="screen" aria-hidden="true"></canvas>
+    <button id="skip" type="button">Skip to character sheet ✕</button>
+    <div id="dungeon-title">
+      <div class="ep">E1M1</div>
+      <p class="title">THE HALL OF GRAHAM</p>
+      <p class="lede">
+        A full-stack engineer waits beyond the great door. Bugs infest the hall: squash them with
+        fireballs, collect the relics, or head straight for the glowing door.
+      </p>
+      <div class="go">CLICK OR PRESS ANY KEY</div>
+      <div class="keys">
+        <span><kbd>W A S D</kbd> / <kbd>↑ ↓</kbd></span><span>move</span>
+        <span><kbd>← →</kbd> / mouse</span><span>turn</span>
+        <span><kbd>SPACE</kbd> / click</span><span>fireball · open doors</span>
+        <span><kbd>ESC</kbd></span><span>skip to the sheet</span>
+      </div>
+    </div>
+    <div id="prompt" hidden></div>
+    <div id="toast" aria-live="polite"></div>
+    <div id="touch" aria-hidden="true">
+      <div class="pad">
+        <span></span><button type="button" data-k="fwd">▲</button><span></span>
+        <button type="button" data-k="left">◀</button>
+        <button type="button" data-k="back">▼</button>
+        <button type="button" data-k="right">▶</button>
+      </div>
+      <button type="button" class="cast" data-k="cast">CAST</button>
+    </div>
+  </div>
+  <div id="hud" aria-hidden="true">
+    <div class="cell"><div class="num" id="hp">100%</div><div class="lbl">HEALTH</div></div>
+    <div class="cell mana"><div class="num" id="mana">100</div><div class="lbl">MANA</div></div>
+    <div class="cell face"><canvas id="face" width="32" height="32"></canvas></div>
+    <div class="cell lv"><div class="num gold">LV {level}</div><div class="lbl">FULL-STACK ENGINEER</div></div>
+    <div class="cell"><div class="num gold" id="relics">0/5</div><div class="lbl">RELICS</div></div>
+    <div class="cell"><div class="num" id="bugs">0/4</div><div class="lbl">BUGS SQUASHED</div></div>
+  </div>
+</div>
+<canvas id="melt" hidden></canvas>
+
+<script>
+  // The engine is a dynamic import, so Vite splits it into its own chunk.
+  const loadGame = () => import("../game/main");
+
+  if (document.documentElement.classList.contains("in-dungeon")) {
+    loadGame()
+      .then((m) => m.enter())
+      .catch(() => document.documentElement.classList.remove("in-dungeon")); // never trap anyone behind a broken intro
+  }
+
+  document.getElementById("reenter")?.addEventListener("click", () => {
+    scrollTo(0, 0);
+    loadGame().then((m) => m.enter());
+  });
+</script>

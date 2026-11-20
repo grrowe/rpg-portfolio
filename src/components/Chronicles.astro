@@ -1,0 +1,39 @@
+---
+import { DEEDS } from "../data/sheet";
+---
+<section class="box" id="chronicles" aria-labelledby="h-chronicles">
+  <h2 id="h-chronicles" tabindex="-1">Chronicles <span class="sub">Projects</span></h2>
+  <ul class="deeds">
+    {
+      DEEDS.map((d) => (
+        <li class="deed">
+          <h3>{d.name}</h3>
+          <p class="summary">{d.summary}</p>
+          <dl>
+            {d.problem && (<div><dt>The problem</dt><dd>{d.problem}</dd></div>)}
+            {d.solution && (<div><dt>The approach</dt><dd>{d.solution}</dd></div>)}
+            {d.impact && (<div><dt>The outcome</dt><dd>{d.impact}</dd></div>)}
+            <div><dt>My role</dt><dd>{d.role}</dd></div>
+            <div>
+              <dt>Gear used</dt>
+              <dd>
+                <ul class="chips">
+                  {d.stack.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          {d.link && (
+            <p>
+              <a href={d.link.href} target="_blank" rel="noreferrer">
+                {d.link.label}
+              </a>
+            </p>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</section>

@@ -1,0 +1,22 @@
+---
+import { SLOTS, SPELLS } from "../data/sheet";
+const slots = Array.from({ length: SLOTS.total }, (_, i) => i < SLOTS.open);
+---
+<section class="box" id="spellbook" aria-labelledby="h-spellbook">
+  <h2 id="h-spellbook" tabindex="-1">Spellbook <span class="sub">Freelance services</span></h2>
+  <p class="slots">
+    Spell slots this month:
+    {slots.map((open) => <span class={`slot${open ? " open" : ""}`} aria-hidden="true" />)}
+    <span>{SLOTS.open} of {SLOTS.total} open</span>
+  </p>
+  <ul class="spells">
+    {
+      SPELLS.map(([name, desc]) => (
+        <li>
+          <b>{name}</b>
+          <span>{desc}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>

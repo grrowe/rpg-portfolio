@@ -1,0 +1,61 @@
+---
+import "../styles/global.css";
+import { PROFILE, SECTION_IDS } from "../data/sheet";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Show the dungeon intro on this page (home only). */
+  dungeon?: boolean;
+}
+const { title, description, dungeon = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+// When `dungeon` is set, a tiny inline script runs before first paint and adds html.in-dungeon,
+// so the sheet never flashes under the intro. Deep links (#tavern etc.) skip the dungeon so
+// recruiters land on content. Without JS no class is added: the dungeon stays hidden and the
+// sheet just works.
+
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: PROFILE.name,
+  jobTitle: "Senior Full-Stack Engineer",
+  url: Astro.site?.toString(),
+  email: `mailto:${PROFILE.email}`,
+  address: { "@type": "PostalAddress", addressLocality: "Indianapolis", addressRegion: "IN", addressCountry: "US" },
+  sameAs: [PROFILE.linkedin, PROFILE.github],
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <meta name="theme-color" content="#2a1d13" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <!-- TODO: add og:image once there's a 1200x630 screenshot of the sheet in /public -->
+
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+
+    {
+      dungeon && (
+        <script is:inline define:vars={{ ids: SECTION_IDS }}>
+          if (!ids.includes(location.hash.slice(1))) document.documentElement.classList.add("in-dungeon");
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
